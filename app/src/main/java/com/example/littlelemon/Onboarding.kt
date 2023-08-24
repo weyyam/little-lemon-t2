@@ -1,5 +1,6 @@
 package com.example.littlelemon
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -42,6 +44,7 @@ class OnBoarding {
 @Composable
 fun OnboardScreen(navController: NavHostController) {
 
+
     var firstname by remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -53,6 +56,7 @@ fun OnboardScreen(navController: NavHostController) {
     }
 
     val textFieldColorsForInput = TextFieldDefaults.outlinedTextFieldColors(textColor = charcoal, containerColor = cloud)
+    val context = LocalContext.current
 
     Column(modifier = Modifier
         .background(color = cloud)
@@ -103,7 +107,8 @@ fun OnboardScreen(navController: NavHostController) {
                     .padding(10.dp)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                colors = textFieldColorsForInput
+                colors = textFieldColorsForInput,
+                singleLine = true
 
             )
             OutlinedTextField(
@@ -114,7 +119,8 @@ fun OnboardScreen(navController: NavHostController) {
                     .padding(10.dp)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                colors = textFieldColorsForInput)
+                colors = textFieldColorsForInput,
+                singleLine = true)
             OutlinedTextField(
                 value = emailaddress,
                 onValueChange = {emailaddress = it},
@@ -123,11 +129,27 @@ fun OnboardScreen(navController: NavHostController) {
                     .padding(10.dp)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                colors = textFieldColorsForInput)
+                colors = textFieldColorsForInput,
+                singleLine = true)
 
             Button(
                 onClick = {
-                navController.navigate(Home.route)
+
+                    if(firstname.text == "" || lastname.text == "" || emailaddress.text == ""){
+                        Toast.makeText(
+                            context,
+                            "Please fill in all registration fields!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "Registered!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navController.navigate(Home.route)
+                    }
+
                 }
                 ,modifier = Modifier
                 .padding(10.dp)
