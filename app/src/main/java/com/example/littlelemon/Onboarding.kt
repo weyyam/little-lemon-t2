@@ -1,5 +1,8 @@
 package com.example.littlelemon
 
+import android.app.Application
+import android.content.ContentValues
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +34,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.littlelemon.ui.theme.MyTypography
 import com.example.littlelemon.ui.theme.charcoal
@@ -42,17 +47,16 @@ class OnBoarding {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardScreen(navController: NavHostController) {
+fun OnboardScreen(navController: NavHostController, viewModel: OnboardingViewModel = viewModel()) {
 
-
-    var firstname by remember {
-        mutableStateOf(TextFieldValue(""))
+    val firstname = remember {
+        mutableStateOf("")
     }
-    var lastname by remember {
-        mutableStateOf(TextFieldValue(""))
+    val lastname = remember {
+        mutableStateOf("")
     }
-    var emailaddress by remember {
-        mutableStateOf(TextFieldValue(""))
+    val emailaddress = remember {
+        mutableStateOf("")
     }
 
     val textFieldColorsForInput = TextFieldDefaults.outlinedTextFieldColors(textColor = charcoal, containerColor = cloud)
@@ -100,8 +104,8 @@ fun OnboardScreen(navController: NavHostController) {
             .padding(10.dp)
             .fillMaxWidth()) {
             OutlinedTextField(
-                value = firstname,
-                onValueChange = {firstname = it},
+                value = firstname.value,
+                onValueChange = {firstname.value = it},
                 placeholder = { Text(text = "First Name")},
                 modifier = Modifier
                     .padding(10.dp)
@@ -112,8 +116,8 @@ fun OnboardScreen(navController: NavHostController) {
 
             )
             OutlinedTextField(
-                value = lastname,
-                onValueChange = {lastname = it},
+                value = lastname.value,
+                onValueChange = {lastname.value = it},
                 label = { Text(text = "Last Name")},
                 modifier = Modifier
                     .padding(10.dp)
@@ -122,8 +126,8 @@ fun OnboardScreen(navController: NavHostController) {
                 colors = textFieldColorsForInput,
                 singleLine = true)
             OutlinedTextField(
-                value = emailaddress,
-                onValueChange = {emailaddress = it},
+                value = emailaddress.value,
+                onValueChange = {emailaddress.value = it},
                 label = { Text(text = "Email Address")},
                 modifier = Modifier
                     .padding(10.dp)
@@ -135,7 +139,7 @@ fun OnboardScreen(navController: NavHostController) {
             Button(
                 onClick = {
 
-                    if(firstname.text == "" || lastname.text == "" || emailaddress.text == ""){
+                    if(firstname.value.isBlank() || lastname.value.isBlank() || emailaddress.value.isBlank()){
                         Toast.makeText(
                             context,
                             "Please fill in all registration fields!",
@@ -147,14 +151,17 @@ fun OnboardScreen(navController: NavHostController) {
                             "Registered!",
                             Toast.LENGTH_SHORT
                         ).show()
+                        viewModel.saveFirstName(firstname.value)
+                        viewModel.saveLastName(lastname.value)
+                        viewModel.saveEmailAddress(emailaddress.value)
                         navController.navigate(Home.route)
                     }
 
                 }
                 ,modifier = Modifier
-                .padding(10.dp)
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
+                    .padding(10.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = yellow ,
                     contentColor = charcoal
@@ -169,14 +176,19 @@ fun OnboardScreen(navController: NavHostController) {
 
 
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun OnBoardingPreview(){
-    LittleLemonTheme {
-        OnboardScreen()
+
+class OnboardingViewModel(application: Application) : AndroidViewModel(application){
+    private val context = application.applicationContext
+    private val sharedPreferences = context.getSharedPreferences("Onboarding_preferences", Context.MODE_PRIVATE)
+
+    fun saveFirstName(value: String){
+        sharedPreferences.edit().putString("firstname", value).apply()
+    }
+    fun saveLastName(value: String){
+        sharedPreferences.edit().putString("lastname", value).apply()
+    }
+
+    fun saveEmailAddress(value: String){
+        sharedPreferences.edit().putString("emailaddress", value).apply()
     }
 }
-
-
- */
