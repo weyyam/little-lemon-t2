@@ -200,4 +200,9 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     fun hasUserRegistered(): Boolean{
         return getFirstName().isNotBlank()
     }
+
+    fun signOut(){
+        sharedPreferences.edit().clear().apply()
+    }
+
 }

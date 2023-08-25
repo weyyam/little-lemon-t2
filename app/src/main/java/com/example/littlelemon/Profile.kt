@@ -1,5 +1,6 @@
 package com.example.littlelemon
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +24,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,10 +36,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.littlelemon.ui.theme.MyTypography
@@ -50,6 +57,7 @@ fun ProfileScreen(navController: NavHostController) {
     var savedFirstName = PreferenceHelper.getFirstName(context)
     var savedLastName = PreferenceHelper.getLastName(context)
     var savedEmailaddress = PreferenceHelper.getEmailAddress(context)
+    val viewModel: OnboardingViewModel = viewModel()
 
 
     Column(
@@ -64,7 +72,7 @@ fun ProfileScreen(navController: NavHostController) {
                 .background(color = cloud),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = { /*TODO*/ },
+            Button(onClick = { navController.navigate(Home.route) },
                 colors = ButtonDefaults.buttonColors(yellow),
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
@@ -153,7 +161,13 @@ fun ProfileScreen(navController: NavHostController) {
                     singleLine = true
                 )
             }
-            Button(onClick = { /*TODO*/ }
+            Button(onClick = {
+                viewModel.signOut()
+                navController.navigate(Onboard.route){
+                    popUpTo(navController.graph.startDestinationId){inclusive = true}
+                }
+                Toast.makeText(context, "Signed out successfully!", Toast.LENGTH_SHORT).show()
+            }
                 , modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(),
@@ -166,9 +180,7 @@ fun ProfileScreen(navController: NavHostController) {
             }
 
             Button(
-                onClick = {
-                    navController.navigate(Home.route)
-                }
+                onClick = {/*TODO*/}
                 ,modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(),
@@ -176,7 +188,7 @@ fun ProfileScreen(navController: NavHostController) {
                     containerColor = yellow ,
                     contentColor = charcoal
                 )){
-                Text(text = "Home Page")
+                Text(text = "Save Changes")
             }
         }
 
