@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.littlelemon.PreferenceHelper.getFirstName
 import com.example.littlelemon.ui.theme.MyTypography
 import com.example.littlelemon.ui.theme.charcoal
 import com.example.littlelemon.ui.theme.cloud
@@ -190,5 +191,13 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
 
     fun saveEmailAddress(value: String){
         sharedPreferences.edit().putString("emailaddress", value).apply()
+    }
+
+    private fun getFirstName(): String{
+        return sharedPreferences.getString("firstname", "") ?: ""
+    }
+
+    fun hasUserRegistered(): Boolean{
+        return getFirstName().isNotBlank()
     }
 }
