@@ -2,26 +2,21 @@ package com.example.littlelemon
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -38,23 +33,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.littlelemon.ui.theme.MyTypography
+import com.example.littlelemon.ui.theme.charcoal
 import com.example.littlelemon.ui.theme.cloud
 import com.example.littlelemon.ui.theme.green
-import com.example.littlelemon.ui.theme.yellow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.math.round
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,9 +101,9 @@ fun HomeScreen(navController: NavHostController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .fillMaxHeight(0.35f)
                 .background(color = green)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -188,7 +181,35 @@ fun HomeScreen(navController: NavHostController) {
 
 @Composable
 fun MenuItemRow(menuItem: MenuItemEntity) {
-    Text(text = menuItem.title)
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.weight(0.7f)
+        ) {
+
+            Text(
+                text = menuItem.title,
+                color = charcoal,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(8.dp)
+                )
+            Text(
+                text = menuItem.description,
+                color = charcoal,
+                fontSize = 10.sp,
+                modifier = Modifier.padding(8.dp)
+                )
+            Text(
+                text = menuItem.price,
+                color = charcoal,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Black,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    }
 
 }
 
@@ -199,7 +220,8 @@ fun mapToDatabaseModel(networkData: MenuNetworkdata): List<MenuItemEntity>{
             title = menuItem.title,
             description = menuItem.description,
             price = menuItem.price,
-            image = menuItem.image
+            image = menuItem.image,
+            category = menuItem.category
         )
     }
 }

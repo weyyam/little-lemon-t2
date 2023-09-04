@@ -11,15 +11,15 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-
 @Entity(tableName = "menu_items")
 data class MenuItemEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val title: String,
     val description: String,
-    val price: Double,
-    val image: String
+    val price: String,  // Updated to be a String
+    val image: String,
+    val category: String
 )
 
 @Dao
@@ -31,11 +31,10 @@ interface MenuItemDao{
     fun insertAll(vararg menuItems: MenuItemEntity)
 }
 
-@Database(entities = [MenuItemEntity::class], version = 1)
+@Database(entities = [MenuItemEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun menuItemDoa(): MenuItemDao
 }
-
 
 object DatabaseHelper{
 
@@ -43,7 +42,8 @@ object DatabaseHelper{
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java, "menu-database"
-        ).build()
+        )
+            .build()  // Removed the .addMigrations(...) line
     }
 
     suspend fun saveToDatabase(menuItems: List<MenuItemEntity>, context: Context){
