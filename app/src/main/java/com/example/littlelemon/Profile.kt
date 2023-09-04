@@ -196,11 +196,10 @@ fun ProfileScreen(navController: NavHostController) {
 
 
 }
-/*
+
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview(){
     ProfileScreen(navController = rememberNavController())
 }
 
- */
