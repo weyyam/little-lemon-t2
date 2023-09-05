@@ -20,6 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -50,6 +53,7 @@ import com.example.littlelemon.ui.theme.MyTypography
 import com.example.littlelemon.ui.theme.charcoal
 import com.example.littlelemon.ui.theme.cloud
 import com.example.littlelemon.ui.theme.green
+import com.example.littlelemon.ui.theme.yellow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -62,6 +66,7 @@ fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var menuItems by remember { mutableStateOf(listOf<MenuItemEntity>())}
+    var selectedCategory by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = Unit) {
         val items = withContext(Dispatchers.IO) {
@@ -146,7 +151,8 @@ fun HomeScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = green)
+                .background(color = green),
+
         ) {
             TextField(
                 value = query,
@@ -171,8 +177,78 @@ fun HomeScreen(navController: NavHostController) {
 
         }
 
+        //sorts items base on title
+        val sortedItems = menuItems.sortedBy { it.title }
+
+        Row (
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = cloud)
+                .padding(horizontal = 10.dp, vertical = 4.dp)
+                )
+        {
+            Button(
+                onClick = { selectedCategory ="starters" },
+                colors = ButtonDefaults.buttonColors(yellow)
+
+            )
+            {
+                Text(
+                    text = "Starter",
+                    color = charcoal
+                )
+            }
+            Button(
+                onClick = { selectedCategory ="mains" },
+                colors = ButtonDefaults.buttonColors(yellow)
+
+            )
+            {
+                Text(
+                    text = "mains",
+                    color = charcoal
+                )
+            }
+            Button(
+                onClick = { selectedCategory ="desserts" },
+                colors = ButtonDefaults.buttonColors(yellow)
+
+            )
+            {
+                Text(
+                    text = "desserts",
+                    color = charcoal
+                )
+            }
+            Button(
+                onClick = { selectedCategory = "" },
+                colors = ButtonDefaults.buttonColors(yellow)
+
+            )
+            {
+                Text(
+                    text = "All",
+                    color = charcoal
+                )
+            }
+
+        }
+
+
+        val categorizedItems = if (selectedCategory.isNotEmpty()){
+            sortedItems.filter { it.category == selectedCategory }
+        } else {
+            sortedItems
+        }
+
+        val filteredItems = if (query.isNotEmpty()) {
+            categorizedItems.filter { it.title.contains(query, ignoreCase = true) }
+        }else{
+            categorizedItems
+        }
         LazyColumn{
-            items(menuItems){ menuItem ->
+            items(filteredItems){ menuItem ->
                 MenuItemRow(menuItem = menuItem)
 
             }
@@ -248,7 +324,8 @@ fun NetworkImage(url: String){
     Image(
         painter = painter,
         contentDescription = null,
-        modifier = Modifier.size(100.dp, 100.dp)
+        modifier = Modifier
+            .size(100.dp, 100.dp)
             .clip(RoundedCornerShape(8)),
         contentScale = ContentScale.Crop
     )
