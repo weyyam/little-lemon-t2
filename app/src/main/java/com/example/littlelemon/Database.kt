@@ -55,4 +55,5 @@ object DatabaseHelper{
         val database = getDatabase(context)
         return database.menuItemDoa().getAllMenuItems()
     }
+
 }

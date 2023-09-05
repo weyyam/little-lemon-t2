@@ -26,3 +26,13 @@ data class MenuItemNetwork(
     val category: String
 
 )
+/*
+{
+fun toMenuItemRoom() = MenuItemRoom(
+    id,
+    title,
+    price,
+    ect
+    )
+    }
+ */
