@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.littlelemon'
+    namespace 'com.weyamf.littlelemon'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.littlelemon"
+        applicationId "com.weyamf.littlelemon"
         minSdk 21
         targetSdk 33
         versionCode 1
